@@ -51,3 +51,9 @@ body {
 #input > .input-sub:nth-child(5) > .buttons {
     height: 9rem;
 }
+
+#display > p {
+    margin: 0;
+    font-size: 3rem;
+    text-align: right;
+}

@@ -57,3 +57,37 @@ body {
     font-size: 3rem;
     text-align: right;
 }
+
+.operators {
+    background: yellow !important;
+}
+
+.numbers {
+    background: sandybrown !important;
+}
+
+.numbers:focus, #backspace:focus, #equals, #clear, #point {
+    outline: none;
+    box-shadow: none;
+}
+
+#backspace {
+    background: wheat !important;
+}
+
+#equals {
+    background: springgreen !important;
+}
+
+#point {
+    background: sandybrown !important;
+}
+
+#clear {
+    background: red !important;
+}
+
+.clicked {
+    transform: scale(0.9);
+    border: 2px solid black;
+}

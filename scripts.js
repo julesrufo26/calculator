@@ -33,12 +33,20 @@ function operate(operation, x, y) {
     }
 }
 
+function animateClick(element) {
+    element.classList.add('clicked');
+    setTimeout(() => {
+        element.classList.remove('clicked');
+    }, 100)
+}
+
 window.addEventListener('load', function() {
     const numbers = document.querySelectorAll('.numbers');
     const display = document.querySelector('#display > p');
     const clear = document.getElementById('clear');
     const backspace = document.getElementById('backspace');
     const point = document.getElementById('point');
+    const equals = document.getElementById('equals');
     let num = 0;
         
     
@@ -47,7 +55,7 @@ window.addEventListener('load', function() {
             //max display length of 15
             if(num.toString().length  == 15) { 
                 return;
-            }//1.0 yung num
+            }
             if(num != 0 && !display.textContent.includes('.')) {
                 num = num * 10 + parseInt(number.textContent,10);
             }
@@ -61,12 +69,14 @@ window.addEventListener('load', function() {
                 num = parseInt(number.textContent, 10);
             }
             display.textContent = num.toString();
+            animateClick(number);
         });
     });
 
     clear.addEventListener('click', () => {
         num = 0;
         display.textContent = 0;
+        animateClick(clear);
     });
 
     backspace.addEventListener('click', () => {
@@ -74,12 +84,15 @@ window.addEventListener('load', function() {
             num = ((num * 10) - ((num * 10) % 10)) / 10;
             display.textContent = `${num}.`;
         }
+        else if(display.textContent.charAt(display.textContent.length-1) == ".") {
+            display.textContent = display.textContent.substring(0, display.textContent.length-1);
+        }
         else{
             num = (num - (num % 10)) / 10;
             display.textContent = num;
         }
 
-        
+        animateClick(backspace);
     });
 
     point.addEventListener('click', () => {
@@ -88,5 +101,10 @@ window.addEventListener('load', function() {
         }
 
         display.textContent += '.';
-    })
+        animateClick(point);
+    });
+
+    equals.addEventListener('click', () => {
+        animateClick(equals);
+    });
 });

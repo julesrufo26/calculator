@@ -43,11 +43,12 @@ function animateClick(element) {
 window.addEventListener('load', function() {
     const numbers = document.querySelectorAll('.numbers');
     const display = document.querySelector('#display > p');
-    const clear = document.getElementById('clear');
     const backspace = document.getElementById('backspace');
-    const point = document.getElementById('point');
-    const equals = document.getElementById('equals');
+    const operators = document.querySelectorAll('.operators');
     let num = 0;
+    let operation = "";
+    let chosenOperation = "";
+    let firstNum = 0;
         
     
     numbers.forEach(number => {
@@ -56,16 +57,27 @@ window.addEventListener('load', function() {
             if(num.toString().length  == 15) { 
                 return;
             }
-            if(num != 0 && !display.textContent.includes('.')) {
+            //Check if operation has value
+            if(operation != ""){
+                chosenOperation = operation;
+                firstNum = display.textContent;
+                num = 0;
+                operation = "";
+            }
+
+            //not 0 and no dot
+            if(num != 0 && !display.textContent.includes('.')) { 
                 num = num * 10 + parseInt(number.textContent,10);
             }
-            else if(display.textContent.includes('.')) {
+            //display has 0
+            else if(display.textContent.includes('.')) { 
                 if(num.toString().includes('.')){
                     return;
                 }
                 num = ((num * 10) + parseInt(number.textContent,10)) / 10;
             }
-            else {
+            //display is 0
+            else { 
                 num = parseInt(number.textContent, 10);
             }
             display.textContent = num.toString();
@@ -73,10 +85,53 @@ window.addEventListener('load', function() {
         });
     });
 
-    clear.addEventListener('click', () => {
-        num = 0;
-        display.textContent = 0;
-        animateClick(clear);
+    operators.forEach(operator => {
+        operator.addEventListener('click', () => {
+            if(operator.textContent == '+') {
+                operation = 'add';
+            }
+            else if (operator.textContent == '-') {
+                operation = 'subtract';
+            }
+            else if (operator.textContent == 'x') {
+                operation = 'multiply';
+            }
+            else if (operator.textContent == '/') {
+                operation = 'divide';
+            }
+            else if (operator.textContent == 'C') {
+                num = 0;
+                display.textContent = 0;
+                animateClick(operator);
+            }
+            else if (operator.textContent == '.') {
+                if(display.textContent.toString().includes('.')) {
+                    return;
+                }
+        
+                display.textContent += '.';
+                animateClick(operator);
+            }
+            else if (operator.textContent == '=') {
+                let answer = 0;
+                firstNum = parseInt(firstNum, 10);
+                num = parseInt(num, 10);
+                if(chosenOperation == 'add'){
+                    answer = operate('add', firstNum, num);
+                }
+                else if(chosenOperation == 'subtract'){
+                    answer = operate('subtract', firstNum, num);
+                }
+                else if(chosenOperation == 'multiply'){
+                    answer = operate('multiply', firstNum, num);
+                }
+                else if(chosenOperation == 'divide'){
+                    answer = operate('divide', firstNum, num);
+                }
+
+                display.textContent = answer;
+            }
+        });
     });
 
     backspace.addEventListener('click', () => {
@@ -84,6 +139,7 @@ window.addEventListener('load', function() {
             num = ((num * 10) - ((num * 10) % 10)) / 10;
             display.textContent = `${num}.`;
         }
+        //When number diplayed is followed by dot, remove the dot in the display
         else if(display.textContent.charAt(display.textContent.length-1) == ".") {
             display.textContent = display.textContent.substring(0, display.textContent.length-1);
         }
@@ -93,18 +149,5 @@ window.addEventListener('load', function() {
         }
 
         animateClick(backspace);
-    });
-
-    point.addEventListener('click', () => {
-        if(display.textContent.toString().includes('.')) {
-            return;
-        }
-
-        display.textContent += '.';
-        animateClick(point);
-    });
-
-    equals.addEventListener('click', () => {
-        animateClick(equals);
     });
 });

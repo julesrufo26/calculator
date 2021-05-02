@@ -45,10 +45,11 @@ window.addEventListener('load', function() {
     const display = document.querySelector('#display > p');
     const backspace = document.getElementById('backspace');
     const operators = document.querySelectorAll('.operators');
-    let num = 0;
     let operation = "";
     let chosenOperation = "";
+    let num = 0;
     let firstNum = 0;
+    let answer = 0;
         
     
     numbers.forEach(number => {
@@ -87,6 +88,15 @@ window.addEventListener('load', function() {
 
     operators.forEach(operator => {
         operator.addEventListener('click', () => {
+            //Check if chosenOperation has already a value
+            if(chosenOperation != "" && operator.textContent != '=') {
+                firstNum = parseInt(firstNum, 10);
+                num = parseInt(num, 10);
+                answer = operate(chosenOperation, firstNum, num);
+                firstNum = answer;
+                display.textContent = answer;
+            }
+
             if(operator.textContent == '+') {
                 operation = 'add';
             }
@@ -113,7 +123,6 @@ window.addEventListener('load', function() {
                 animateClick(operator);
             }
             else if (operator.textContent == '=') {
-                let answer = 0;
                 firstNum = parseInt(firstNum, 10);
                 num = parseInt(num, 10);
                 if(chosenOperation == 'add'){

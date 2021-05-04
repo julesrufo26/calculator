@@ -47,6 +47,7 @@ window.addEventListener('load', () => {
     const operators = document.querySelectorAll('.operators');
     const equals = document.getElementById('equals');
     const clear = document.getElementById('clear');
+    const point = document.getElementById('point');
     let num = 0;
     let firstNum = 0;
     let answer = 0;
@@ -54,12 +55,22 @@ window.addEventListener('load', () => {
 
     numbers.forEach(number => {
         number.addEventListener('click', () => {
-            //check if operation has value. If true, clear current display
-            if(operation != ''){
+            //check if operation has value and num is zero. If true, clear current display
+            if(operation != '' && num == 0){
                 display.textContent = '';
             }
 
-            num = (num * 10) + parseInt(number.textContent, 10);
+            //check if the current display has a dot
+            if(display.textContent.includes('.')){
+                console.log('check');
+                num = display.textContent;
+                num = num + number.textContent;
+                num = parseFloat(num);
+            }
+            else{
+                num = (num * 10) + parseInt(number.textContent, 10);
+            }
+            
             display.textContent = num;
 
             animateClick(number);
@@ -135,5 +146,13 @@ window.addEventListener('load', () => {
         num = 0;
 
         display.textContent = num;
+    });
+
+    point.addEventListener('click', () =>{
+        if(display.textContent.includes('.')){
+            return;
+        }
+
+        display.textContent = display.textContent + '.';
     });
 });

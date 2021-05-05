@@ -55,6 +55,9 @@ window.addEventListener('load', () => {
 
     numbers.forEach(number => {
         number.addEventListener('click', () => {
+            let isFloatingPoint = false;
+            let trailingZerosCount = 0;
+
             //check if operation has value and num is zero. If true, clear current display
             if(operation != '' && num == 0){
                 display.textContent = '';
@@ -62,16 +65,42 @@ window.addEventListener('load', () => {
 
             //check if the current display has a dot
             if(display.textContent.includes('.')){
-                console.log('check');
+                isFloatingPoint = true;
+                let lengthBeforeParse = 0;
+                let lengthAfterParse = 0;
+
                 num = display.textContent;
                 num = num + number.textContent;
+                lengthBeforeParse = num.length;
                 num = parseFloat(num);
+                lengthAfterParse = num.toString().length;
+
+                /*If number turns to whole number after parse, add 1 to the difference of 
+                  lengthBeforeParse and lengthAfterParse. Otherwise, get only the difference.*/
+                if(num%1 == 0){
+                    trailingZerosCount = lengthBeforeParse - (lengthAfterParse + 1);
+                }
+                else {
+                    trailingZerosCount = lengthBeforeParse - lengthAfterParse;
+                }
+                
             }
             else{
                 num = (num * 10) + parseInt(number.textContent, 10);
             }
             
-            display.textContent = num;
+            if(isFloatingPoint && num%1 == 0) {
+                display.textContent = num + '.';
+            }
+            else{
+                display.textContent = num;
+            }
+
+            while(trailingZerosCount > 0) {
+                display.textContent += '0';
+                trailingZerosCount--;
+            }
+            
 
             animateClick(number);
         });

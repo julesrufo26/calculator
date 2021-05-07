@@ -48,6 +48,7 @@ window.addEventListener('load', () => {
     const equals = document.getElementById('equals');
     const clear = document.getElementById('clear');
     const point = document.getElementById('point');
+    const backspace = document.getElementById('backspace');
     let num = 0;
     let firstNum = 0;
     let answer = 0;
@@ -61,6 +62,11 @@ window.addEventListener('load', () => {
             //check if operation has value and num is zero. If true, clear current display
             if(operation != '' && num == 0){
                 display.textContent = '';
+            }
+
+            //max of 15 numbers only
+            if(display.textContent.length == 15) {
+                return;
             }
 
             //check if the current display has a dot
@@ -156,6 +162,14 @@ window.addEventListener('load', () => {
             num = 0;
             return;
         }
+        else if(answer.toString().length > 16){
+            display.textContent = "Answer too long"
+
+            operation = '';
+            firstNum = 0;
+            num = 0;
+            return;
+        }
 
         operation = '';
         firstNum = 0;
@@ -183,5 +197,37 @@ window.addEventListener('load', () => {
         }
 
         display.textContent = display.textContent + '.';
+    });
+
+    backspace.addEventListener('click', () =>{
+        if(display.textContent.substr(-1) == '.'){
+            display.textContent = num;
+        }
+        else if(display.textContent.includes('.')){
+            let lengthAfterParse = 0;
+            let lengthBeforeParse = 0;
+            let trailingZerosCount = 0;
+            num = display.textContent.substr(0, display.textContent.length-1);
+            lengthBeforeParse = num.length;
+            num = parseFloat(num);
+            lengthAfterParse = num.toString().length;
+            if(num%1 == 0){
+                display.textContent = `${num}.`;
+                trailingZerosCount = lengthBeforeParse - (lengthAfterParse + 1);
+            }
+            else{
+                display.textContent = `${num}`;
+                trailingZerosCount = lengthBeforeParse - lengthAfterParse;
+            }
+
+            while(trailingZerosCount > 0){
+                display.textContent += '0';
+                trailingZerosCount--;
+            }
+        }
+        else {
+            num = (num - num%10) / 10;
+            display.textContent = num;
+        }
     });
 });
